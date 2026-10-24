@@ -137,7 +137,10 @@ function addObservation() {
 $('#add-observation').addEventListener('click', addObservation);
 $('#observation-text').addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); addObservation(); } });
 function resetDraft() {
-  if (!window.confirm('Start a fresh checklist? Download your notes first if you need them. This clears only the draft on this browser, not any sensor files or downloads.')) return;
+  $('#reset-dialog').showModal();
+}
+function confirmReset() {
+  $('#reset-dialog').close();
   const current = state.session;
   state = freshState(); state.session.participant = current.participant;
   state.session.run = String(Math.min(99, (Number(current.run) || 0) + 1));
@@ -148,4 +151,6 @@ function resetDraft() {
 }
 $('#reset-draft').addEventListener('click', resetDraft);
 $('#reset-draft-footer').addEventListener('click', resetDraft);
+$('#cancel-reset').addEventListener('click', () => $('#reset-dialog').close());
+$('#confirm-reset').addEventListener('click', confirmReset);
 renderIdentity(); renderProgress(); renderObservations(); renderTimer(); showStep(hashStep() ?? state.step);
