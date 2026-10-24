@@ -44,6 +44,7 @@ function showStep(index, focus = false) {
   state.step = index;
   $$('.step-panel').forEach((p, i) => { p.hidden = i !== index; });
   $$('#step-nav a').forEach((a, i) => { if (i === index) a.setAttribute('aria-current', 'step'); else a.removeAttribute('aria-current'); });
+  if (window.innerWidth <= 850) $$('#step-nav a')[index].scrollIntoView({ block: 'nearest', inline: 'nearest' });
   $('#previous').disabled = index === 0;
   $('#next').textContent = `${nextLabels[index]} ${index === 5 ? '↓' : '→'}`;
   $('#step-count').textContent = `STEP ${String(index + 1).padStart(2, '0')} OF 06`;
@@ -135,7 +136,7 @@ function addObservation() {
 }
 $('#add-observation').addEventListener('click', addObservation);
 $('#observation-text').addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); addObservation(); } });
-$('#reset-draft').addEventListener('click', () => {
+function resetDraft() {
   if (!window.confirm('Start a fresh checklist? Download your notes first if you need them. This clears only the draft on this browser, not any sensor files or downloads.')) return;
   const current = state.session;
   state = freshState(); state.session.participant = current.participant;
@@ -144,5 +145,7 @@ $('#reset-draft').addEventListener('click', () => {
   $$('[data-check]').forEach(input => { input.checked = false; });
   renderIdentity(); renderProgress(); renderObservations(); renderTimer(); save(); go(0); showStep(0, true);
   toast('Fresh checklist created. Confirm the new date and run number.');
-});
+}
+$('#reset-draft').addEventListener('click', resetDraft);
+$('#reset-draft-footer').addEventListener('click', resetDraft);
 renderIdentity(); renderProgress(); renderObservations(); renderTimer(); showStep(hashStep() ?? state.step);
