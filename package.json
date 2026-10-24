@@ -1,0 +1,8 @@
+{
+  "name": "mond-rest-lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "An interactive field guide for simultaneous MOND and GSR resting-baseline collection in iMotions.",
+  "scripts": { "test": "node --test tests/*.test.js", "start": "node server.js" }
+}
